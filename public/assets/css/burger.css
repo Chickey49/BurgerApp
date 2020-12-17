@@ -1,0 +1,35 @@
+body {
+    background-image: url("https://ak1.picdn.net/shutterstock/videos/1976041/thumb/1.jpg");
+  }
+  
+
+  .header-text {
+    border-radius: 10px;
+    background-color: #f7f4eb;
+    border: solid thin #618815;
+    text-align: center;
+  }
+  
+  .form-frame {
+    border-radius: 10px;
+    background-color: #fee990;
+    border: solid thin #618815;
+    text-align: center;
+  }
+  
+  .text-block {
+    background-color: #fee990;
+    opacity: 80%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  
+  label {
+    color: #324708
+  }
+  
+  .list-group-item {
+    background-color: #f7f4eb;
+  }
+  

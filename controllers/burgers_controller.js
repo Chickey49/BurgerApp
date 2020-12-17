@@ -1,54 +1,72 @@
-const app = require('express');
+
 const burger = require('../models/burger.js');
+var express = require("express");
 
+var router = express.Router();
 
-// Create the `router` for the app, and export the `router` at the end of your file.
-class Router {
-    constructor(){
-        // The routes property will store all routes and their callback functions in an array.
-        this.routes = [];
-     }
-    
-     get(uri, callback){
-        // ensure that the parameters are not empty
-        if(!uri || !callback) throw new Error('uri or callback must be given');
+// Import the model (cat.js) to use its database functions.
+var Burger = require("../models/Burger.js");
 
-        // ensure that the parameters have the correct types
-        if(typeof uri !== "string") throw new TypeError('typeof uri must be a string');
-        if(typeof callback !== "function") throw new TypeError('typeof callback must be a function');
+// Create all our routes and set up logic within those routes where required.
+router.get("/", function (req, res) {
+    // return all burgers
+    let b = new Burger();
+    b.selectAll((err, data) => {
+        console.log(data);
+        showIndex(data, res);
+        console.log("select all done");
+    });
+});
 
-        // throw an error if the route uri already exists to avoid confilicting routes
-        this.routes.forEach(route=>{
-            if(route.uri === uri) throw new Error(`the uri ${route.uri} already exists`);
-        })
-
-        // Step 5 - add route to the array of routes
-        const route = {
-            uri, // in javascript, this is the same as uri: uri, callback: callback, avoids repition
-            callback
-        }
-        this.routes.push(route);
-    }
-
-    init(){
-        this.routes.some(route=>{
-
-            let regEx = new RegExp(`^${route.uri}$`); // i'll explain this conversion to regular expression below
-            let path = window.location.pathname;
-
-            if(path.match(regEx)){
-                // our route logic is true, return the corresponding callback
-
-                let req = { path } // i'll also explain this code below
-                return route.callback.call(this, req);
-            }
-        })
-    }
+function showIndex(data, res) {
+    let b = new Burger();
+    let unEaten = b.getUndevoured(data);
+    let eaten = b.getDevoured(data);
+    res.render("index", {
+        undevoured: unEaten,
+        devoured: eaten
+    });
 }
 
+router.post("/", function (req, res) {
+    let b = new Burger();
+    b.create(req.body, (result) => {
+        console.log(result);
+        res.status(200).end();
+    });
+});
 
-    // app.listen(3000, function(){
-    //     console.log('Listening on port 8000...')
+router.put("/:id", function (req, res) {
+    let b = new Burger();
+    b.update(
+        {
+            id: req.params.id,
+            devoured: 1
+        },
+        (data) => {
+            // if (data.changedRows === 0) {
+            //     // If no rows were changed, then the ID must not exist, so 404
+            //     return res.status(404).end();
+            // }
+            res.status(200).end();
+        }
+    );
+});
 
-
-module.exports = Router;
+router.delete("/:id", function (req, res) {
+    let b = new Burger();
+    b.delete(
+        {
+            id: req.params.id,
+        },
+        (data) => {
+            // if (data.changedRows === 0) {
+            //     // If no rows were changed, then the ID must not exist, so 404
+            //     return res.status(404).end();
+            // }
+            res.status(204).end();
+        }
+    );
+});
+// Export routes for server.js to use.
+module.exports = router;

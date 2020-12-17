@@ -2,65 +2,78 @@
 var orm = require("../config/orm.js");
 
 class Burger {
-    constructor(id, burger_name, devoured) {
-        this.id = id;
-        this.name = burger_name;
-        this.devoured = devoured;
+
+    getDevoured(data) {
+        return data.filter(b => b.devoured === 1);
     }
 
-
-    async selectAll() {
-        return new Promise(data => {
-           await orm.selectAll("burgers", function (res) {
-                cb(res);
-            });
-        })
-    }
-    // The variables cols and vals are arrays.
-    async create(burger) {
-        var cols = getColums(burger);
-        var vals = getValues(burger);
-        return new Promise(data => {
-            await orm.create("burgers", cols, vals, function (res) {
-                cb(res);
-            });
-        })
-    }
-    async update(burger) {
-        let condition = "id = " + burger.id;
-        return new Promise(data => {
-            await orm.update("burgers", burger, condition, function (res) {
-                cb(res);
-            });
-        })
+    getUndevoured(data) {
+        return data.filter(b => b.devoured === 0);
     }
     getColums(ob) {
         var arr = [];
-        return new Promise(data => {
-            for (var key in ob) {
-                if (key != "id") {
-                    if (Object.hasOwnProperty.call(ob, key)) {
-                        arr.push(key);
-                    }
+        for (var key in ob) {
+            if (key != "id") {
+                if (Object.hasOwnProperty.call(ob, key)) {
+                    arr.push(key);
                 }
             }
-            return arr;
-        })
-    }
-    getValues() {
-        var arr = [];
+        }
+        return arr;
+    };
 
-        return new Promise(data => {
-            for (var key in ob) {
-                var value = ob[key];
-                // check to skip hidden properties
+    getValues(ob) {
+        var arr = [];
+        for (var key in ob) {
+            var value = ob[key];
+            // check to skip hidden properties
+            if (key != "id") {
                 if (Object.hasOwnProperty.call(ob, key)) {
                     arr.push(value);
                 }
             }
-            return arr;
-        })
+        }
+        return arr;
     }
+    selectAll(done) {
+        // sql.query("SELECT * FROM customers", (err, res) => {
+        orm.all("burgers", (data) => {
+            console.log("burgers: ", data);
+            var burgers = data.map(r => {
+                return {
+                    id: r.id,
+                    burger_name: r.burger_name,
+                    devoured: r.devoured,
+                }
+            })
+            done(null, burgers);
+        });
+    };
+
+    // The variables cols and vals are arrays.
+
+    create(burger, done) {
+        var cols = this.getColums(burger);
+        var vals = this.getValues(burger);
+        orm.create("burgers", cols, vals, (data) => {
+            done(null, burger);
+        });
+    }
+
+    update(burger, done) {
+        let condition = "id = " + burger.id;
+        orm.update("burgers", burger, condition, (data) => {
+            done(null, burger);
+        });
+    }
+
+    delete(burger, done) {
+        let condition = "id = " + burger.id;
+        orm.delete("burgers", condition, (data) => {
+            done(null, burger);
+        });
+    }
+
 }
 // Export the database functions for the controller (catsController.js).
 module.exports = Burger;

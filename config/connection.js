@@ -1,22 +1,12 @@
 
-class Connection{
+const mysql = require("mysql");
+// const dbConfig = require("../config/db.config.js");
 
-    async connect() {
-        this.db = mysql.createConnection({
-            host: 'localhost',
-            user: 'root',
-            password: 'Password!',
-            database: 'burgers_db'
-        });
-        try {
-            await this.db.connect();
-        } catch (e) {
-            console.log(e);
-        }
-    }
-}
+var connection = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: 'Password!',
+    database: 'burgers_db'
+});
 
-
-
-
-module.exports = Connection;
+module.exports = connection;

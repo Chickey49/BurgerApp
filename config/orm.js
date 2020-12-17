@@ -43,6 +43,8 @@ function objToSql(ob) {
 
 // Object for all our SQL statement functions.
 var orm = {
+
+
   all: function (tableInput, cb) {
     var queryString = "SELECT * FROM " + tableInput + ";";
     connection.query(queryString, function (err, result) {
@@ -52,6 +54,8 @@ var orm = {
       cb(result);
     });
   },
+
+
   create: function (table, cols, vals, cb) {
     var queryString = "INSERT INTO " + table;
 
@@ -80,6 +84,21 @@ var orm = {
     queryString += objToSql(objColVals);
     queryString += " WHERE ";
     queryString += condition;
+
+    console.log(queryString);
+    connection.query(queryString, function (err, result) {
+      if (err) {
+        throw err;
+      }
+
+      cb(result);
+    });
+  },
+
+  delete: function (table, condition, cb) {
+    var queryString = "delete from " + table;
+    queryString += " WHERE ";
+    queryString += condition; // sql injection ??
 
     console.log(queryString);
     connection.query(queryString, function (err, result) {
