@@ -12,7 +12,6 @@ router.get("/", function (req, res) {
     // return all burgers
     let b = new Burger();
     b.selectAll((err, data) => {
-        console.log(data);
         showIndex(data, res);
         console.log("select all done");
     });
@@ -31,7 +30,6 @@ function showIndex(data, res) {
 router.post("/", function (req, res) {
     let b = new Burger();
     b.create(req.body, (result) => {
-        console.log(result);
         res.status(200).end();
     });
 });
