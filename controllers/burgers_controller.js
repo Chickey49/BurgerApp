@@ -26,7 +26,7 @@ function showIndex(data, res) {
     });
 }
 
-router.post("burgers/", function (req, res) {
+router.post("/", function (req, res) {
     let b = new Burger();
     b.create(req.body, (result) => {
         res.status(200).end();
