@@ -7,7 +7,7 @@ var router = express.Router();
 
 
 // Create all our routes and set up logic within those routes where required.
-router.get("/", function (req, res) {
+router.get("/api/burgers", function (req, res) {
     // return all burgers
     let b = new Burger();
     b.selectAll((err, data) => {
@@ -26,14 +26,14 @@ function showIndex(data, res) {
     });
 }
 
-router.post("/", function (req, res) {
+router.post("/api/burgers", function (req, res) {
     let b = new Burger();
     b.create(req.body, (result) => {
         res.status(200).end();
     });
 });
 
-router.put("/:id", function (req, res) {
+router.put("/api/burgers/:id", function (req, res) {
     let b = new Burger();
     b.update(
         {
