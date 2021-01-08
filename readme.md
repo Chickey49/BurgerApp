@@ -5,6 +5,7 @@
 - [Installation](#Installation)
 - [License](#License) 
 ## About the Project  
+This project helped me learn three-tiered application development.  I enjoyed MySQL database design and schema development.  Also, we leveraged a home-grown ORM to abstract the DB details. I learned a lot about MVC with Express, such as Route handlers to call controllers which pulled models from the database.  Models were databound to views using handlebars.  
 <a><img src="images\ScreenshotEatDaBurger.jpg"/></a>
 A burger logger with MySQL, Node, Express, Handlebars and a homemade ORM.
 ## Usage  
